@@ -8,19 +8,19 @@ import (
 )
 
 type News struct {
-	Title   string
-	Content string
+	Title   string `json:"title"`
+	Content string `json:"content"`
 }
 
 type UserOverview struct {
-	Username string
-	Identity string
-	Role     string
+	Username string `json:"username"`
+	Identity string `json:"identity"`
+	Role     string `json:"role"`
 }
 
 type Homepage struct {
-	User UserOverview
-	News []News
+	User UserOverview `json:"user"`
+	News []News       `json:"news"`
 }
 
 func ParseWelcomePage(r io.Reader) (*Homepage, error) {

@@ -11,43 +11,43 @@ import (
 )
 
 type TermData struct {
-	SubjectsTaken     int
-	CreditsTaken      int
-	CreditsPassed     int
-	GradePoint        float64
-	GradePointAverage float64
+	SubjectsTaken     int     `json:"subjects_taken"`
+	CreditsTaken      int     `json:"credits_taken"`
+	CreditsPassed     int     `json:"credits_passed"`
+	GradePoint        float64 `json:"grade_point"`
+	GradePointAverage float64 `json:"grade_point_average"`
 
-	TotalCreditsTaken            int
-	TotalCreditsPassed           int
-	TotalCreditsEarned           int
-	TotalGradePoint              float64
-	TotalGradePointAverage       float64
-	TotalPassedGradePointAverage float64
+	TotalCreditsTaken            int     `json:"total_credits_taken"`
+	TotalCreditsPassed           int     `json:"total_credits_passed"`
+	TotalCreditsEarned           int     `json:"total_credits_earned"`
+	TotalGradePoint              float64 `json:"total_grade_point"`
+	TotalGradePointAverage       float64 `json:"total_grade_point_average"`
+	TotalPassedGradePointAverage float64 `json:"total_passed_grade_point_average"`
 }
 
 type AcademicTerm struct {
-	Period string
-	Term   string
-	Data   *TermData
+	Period string    `json:"period"`
+	Term   string    `json:"term"`
+	Data   *TermData `json:"data"`
 }
 
 type StudentAcademic struct {
-	NPM           string
-	Name          string
-	Year          int
-	Major         string
-	Tutor         string
-	Status        string
-	CreditsPassed int
-	GradePoints   float64
-	GPA           float64
-	CreditsEarned int
+	NPM           string  `json:"npm"`
+	Name          string  `json:"name"`
+	Year          int     `json:"year"`
+	Major         string  `json:"major"`
+	Tutor         string  `json:"tutor"`
+	Status        string  `json:"status"`
+	CreditsPassed int     `json:"credits_passed"`
+	GradePoints   float64 `json:"grade_points"`
+	GPA           float64 `json:"gpa"`
+	CreditsEarned int     `json:"credits_earned"`
 }
 
 type StudentSummary struct {
-	Student        StudentAcademic
-	ScoresOverview map[string]int
-	Terms          []AcademicTerm
+	Student        StudentAcademic `json:"student"`
+	ScoresOverview map[string]int  `json:"scores_overview"`
+	Terms          []AcademicTerm  `json:"terms"`
 }
 
 func parseSummaryBox(box *goquery.Selection) (*StudentAcademic, error) {
@@ -151,20 +151,20 @@ func ParseAcademicSummaryPage(r io.Reader) (*StudentSummary, error) {
 }
 
 type SubjectScore struct {
-	Code       string
-	Curriculum string
-	Name       string
-	Class      string
-	Credits    int
-	Status     string
-	FinalScore string
-	FinalIndex string
+	Code       string `json:"code"`
+	Curriculum string `json:"curriculum"`
+	Name       string `json:"name"`
+	Class      string `json:"class"`
+	Credits    int    `json:"credits"`
+	Status     string `json:"status"`
+	FinalScore string `json:"final_score"`
+	FinalIndex string `json:"final_index"`
 }
 
 type SemesterScore struct {
-	Period   string
-	Semester int
-	Scores   []SubjectScore
+	Period   string         `json:"period"`
+	Semester int            `json:"semester"`
+	Scores   []SubjectScore `json:"scores"`
 }
 
 func getTextFromNode(elem *html.Node) string {
