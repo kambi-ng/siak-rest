@@ -1,6 +1,7 @@
 package httpserver
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"net/http/cookiejar"
@@ -86,6 +87,14 @@ func Home(c *fiber.Ctx) error {
 
 	resp, err := req.Get("https://academic.ui.ac.id/main/Welcome/")
 	if err != nil {
+		var e *SiakError
+		if errors.As(err, &e) {
+			return c.Status(e.Status).JSON(Response[any]{
+				Status:  e.Status,
+				Message: e.Message,
+				Data:    nil,
+			})
+		}
 		return err
 	}
 
@@ -105,6 +114,14 @@ func AcademicSummary(c *fiber.Ctx) error {
 
 	resp, err := req.Get("https://academic.ui.ac.id/main/Academic/Summary")
 	if err != nil {
+		var e *SiakError
+		if errors.As(err, &e) {
+			return c.Status(e.Status).JSON(Response[any]{
+				Status:  e.Status,
+				Message: e.Message,
+				Data:    nil,
+			})
+		}
 		return err
 	}
 
@@ -124,6 +141,14 @@ func AcademicHistory(c *fiber.Ctx) error {
 
 	resp, err := req.Get("https://academic.ui.ac.id/main/Academic/HistoryByTerm")
 	if err != nil {
+		var e *SiakError
+		if errors.As(err, &e) {
+			return c.Status(e.Status).JSON(Response[any]{
+				Status:  e.Status,
+				Message: e.Message,
+				Data:    nil,
+			})
+		}
 		return err
 	}
 
