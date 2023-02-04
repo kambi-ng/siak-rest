@@ -1,9 +1,12 @@
 package httpserver
 
 import (
+	"errors"
+	"io"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -28,11 +31,21 @@ func Login(c *fiber.Ctx) error {
 		Jar: jar,
 	}
 
-	if _, err = client.PostForm("https://academic.ui.ac.id/main/Authentication/Index", url.Values{"u": {p.Username}, "p": {p.Password}}); err != nil {
+	resp, err := client.PostForm("https://academic.ui.ac.id/main/Authentication/Index", url.Values{"u": {p.Username}, "p": {p.Password}})
+	if err != nil {
 		return err
 	}
 
-	resp, err := client.Get("https://academic.ui.ac.id/main/Authentication/ChangeRole")
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	if strings.Contains(string(b), "Login Failed") {
+		return errors.New("authentication failed")
+	}
+
+	resp, err = client.Get("https://academic.ui.ac.id/main/Authentication/ChangeRole")
 	if err != nil {
 		return err
 	}
@@ -54,5 +67,9 @@ func Login(c *fiber.Ctx) error {
 		c.Cookie(cookies)
 	}
 
-	return c.Status(resp.StatusCode).Send(nil)
+	return c.Status(resp.StatusCode).JSON(Response[any]{
+		Status:  200,
+		Message: "Authentication success. Please use given cookie for next requests.",
+		Data:    nil,
+	})
 }
