@@ -18,6 +18,7 @@ func (s *Server) Start() {
 	})
 
 	s.Router.Post("/login", Login)
+	s.Router.Get("/home", Home)
 
 	s.Router.Listen(":8080")
 }

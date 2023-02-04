@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/kambi-ng/siak-rest/siaklib"
 )
 
 func Login(c *fiber.Ctx) error {
@@ -72,4 +73,23 @@ func Login(c *fiber.Ctx) error {
 		Message: "Authentication success. Please use given cookie for next requests.",
 		Data:    nil,
 	})
+}
+
+func Home(c *fiber.Ctx) error {
+	req, err := MakeRequestor(c)
+	if err != nil {
+		return err
+	}
+
+	resp, err := req.Get("https://academic.ui.ac.id/main/Welcome/")
+	if err != nil {
+		return err
+	}
+
+	data, err := siaklib.ParseWelcomePage(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(data)
 }
