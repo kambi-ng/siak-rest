@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
+	"golang.org/x/net/html"
 )
 
 type TermData struct {
@@ -156,8 +157,8 @@ type SubjectScore struct {
 	Class      string
 	Credits    int
 	Status     string
-	finalScore string
-	finalIndex string
+	FinalScore string
+	FinalIndex string
 }
 
 type SemesterScore struct {
@@ -166,10 +167,22 @@ type SemesterScore struct {
 	Scores   []SubjectScore
 }
 
+func getTextFromNode(elem *html.Node) string {
+	for {
+		if elem.Type == html.TextNode {
+			break
+		}
+
+		elem = elem.FirstChild
+	}
+
+	return elem.Data
+}
+
 func parseSubjectRow(row *goquery.Selection) SubjectScore {
 	children := row.Children()
 
-	code := children.Get(1).FirstChild.Data
+	code := children.Get(1).FirstChild.FirstChild.Data
 	curriculum := children.Get(2).FirstChild.Data
 	name := children.Get(3).FirstChild.Data
 	class := children.Get(4).FirstChild.Data
@@ -178,10 +191,10 @@ func parseSubjectRow(row *goquery.Selection) SubjectScore {
 
 	var finalScore, finalIndex string
 	if children.Length() == 10 {
-		finalScore = children.Get(7).FirstChild.Data
-		finalIndex = children.Get(8).FirstChild.Data
+		finalScore = getTextFromNode(children.Get(7).FirstChild)
+		finalIndex = getTextFromNode(children.Get(8).FirstChild)
 	} else {
-		finalScore = children.Get(7).FirstChild.Data
+		finalScore = getTextFromNode(children.Get(7).FirstChild)
 		finalIndex = finalScore
 	}
 
@@ -207,11 +220,13 @@ func ParseAcademicHistoryPage(r io.Reader) (*[]SemesterScore, error) {
 		elem := doc.FindNodes(rows.Get(i))
 		match := yearTermRegExp.FindStringSubmatch(elem.Text())
 		if match != nil {
-			semesterScores = append(semesterScores, SemesterScore{
-				Semester: currentSemester,
-				Period:   period,
-				Scores:   subjectScores,
-			})
+			if i != 1 {
+				semesterScores = append(semesterScores, SemesterScore{
+					Semester: currentSemester,
+					Period:   period,
+					Scores:   subjectScores,
+				})
+			}
 
 			paramsMap := make(map[string]string)
 			for i, name := range yearTermRegExp.SubexpNames() {
@@ -228,6 +243,12 @@ func ParseAcademicHistoryPage(r io.Reader) (*[]SemesterScore, error) {
 
 		subjectScores = append(subjectScores, parseSubjectRow(elem))
 	}
+
+	semesterScores = append(semesterScores, SemesterScore{
+		Semester: currentSemester,
+		Period:   period,
+		Scores:   subjectScores,
+	})
 
 	return &semesterScores, nil
 }
