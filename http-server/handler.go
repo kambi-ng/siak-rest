@@ -159,3 +159,28 @@ func AcademicHistory(c *fiber.Ctx) error {
 
 	return c.JSON(data)
 }
+
+func UserPhoto(c *fiber.Ctx) error {
+	req, err := MakeRequestor(c)
+	if err != nil {
+		return err
+	}
+
+	resp, err := req.Get("https://academic.ui.ac.id/main/Academic/UserPhoto")
+	if err != nil {
+		var e *SiakError
+		if errors.As(err, &e) {
+			return c.Status(e.Status).JSON(Response[any]{
+				Status:  e.Status,
+				Message: e.Message,
+				Data:    nil,
+			})
+		}
+		return err
+	}
+
+	for key, value := range resp.Header {
+		c.Set(key, strings.Join(value, ", "))
+	}
+	return c.SendStream(resp.Body)
+}
