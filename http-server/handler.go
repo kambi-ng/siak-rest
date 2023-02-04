@@ -93,3 +93,41 @@ func Home(c *fiber.Ctx) error {
 
 	return c.JSON(data)
 }
+
+func AcademicSummary(c *fiber.Ctx) error {
+	req, err := MakeRequestor(c)
+	if err != nil {
+		return err
+	}
+
+	resp, err := req.Get("https://academic.ui.ac.id/main/Academic/Summary")
+	if err != nil {
+		return err
+	}
+
+	data, err := siaklib.ParseAcademicSummaryPage(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(data)
+}
+
+func AcademicHistory(c *fiber.Ctx) error {
+	req, err := MakeRequestor(c)
+	if err != nil {
+		return err
+	}
+
+	resp, err := req.Get("https://academic.ui.ac.id/main/Academic/HistoryByTerm")
+	if err != nil {
+		return err
+	}
+
+	data, err := siaklib.ParseAcademicHistoryPage(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(data)
+}
