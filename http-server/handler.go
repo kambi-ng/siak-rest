@@ -1,7 +1,6 @@
 package httpserver
 
 import (
-	"errors"
 	"io"
 	"net/http"
 	"net/http/cookiejar"
@@ -43,7 +42,11 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	if strings.Contains(string(b), "Login Failed") {
-		return errors.New("authentication failed")
+		return c.Status(fiber.StatusUnauthorized).JSON(Response[any]{
+			Status:  401,
+			Message: "Authentication failed",
+			Data:    nil,
+		})
 	}
 
 	resp, err = client.Get("https://academic.ui.ac.id/main/Authentication/ChangeRole")
@@ -70,7 +73,7 @@ func Login(c *fiber.Ctx) error {
 
 	return c.Status(resp.StatusCode).JSON(Response[any]{
 		Status:  200,
-		Message: "Authentication success. Please use given cookie for next requests.",
+		Message: "Authentication success. Please use given cookie for next requests",
 		Data:    nil,
 	})
 }
