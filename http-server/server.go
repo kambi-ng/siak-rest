@@ -1,6 +1,9 @@
 package httpserver
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+)
 
 type Server struct {
 	Router *fiber.App
@@ -13,6 +16,7 @@ func MakeServer() Server {
 }
 
 func (s *Server) Start() {
+	s.Router.Use(cors.New())
 	s.Router.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
