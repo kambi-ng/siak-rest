@@ -34,6 +34,7 @@ func (s *Server) Start() {
 	})
 
 	s.Router.Post("/login", Login)
+	s.Router.Get("/me", Me)
 	s.Router.Get("/home", Home)
 	s.Router.Get("/photo", UserPhoto)
 

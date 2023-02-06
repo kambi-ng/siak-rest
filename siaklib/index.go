@@ -23,6 +23,30 @@ type Homepage struct {
 	News []News       `json:"news"`
 }
 
+type UserInfo struct {
+	Name  string `json:"name,omitempty"`
+	Role  string `json:"role,omitempty"`
+	Group string `json:"group,omitempty"`
+}
+
+func ParseNav(r io.Reader) (*UserInfo, error) {
+	doc, err := goquery.NewDocumentFromReader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	nav := doc.Find("#m_b1 > .linfo > strong")
+	nameNode := nav.Get(0).FirstChild.NextSibling.NextSibling
+	name := strings.TrimSpace(strings.ReplaceAll(nameNode.Data, "–", ""))
+
+	roleNode := nameNode.NextSibling
+	role := roleNode.FirstChild.Data
+
+	groupNode := roleNode.NextSibling
+	group := strings.TrimSpace(groupNode.Data)
+	return &UserInfo{name, role, group}, nil
+}
+
 func ParseWelcomePage(r io.Reader) (*Homepage, error) {
 	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {

@@ -108,6 +108,33 @@ func Home(c *fiber.Ctx) error {
 	return c.JSON(data)
 }
 
+func Me(c *fiber.Ctx) error {
+	req, err := MakeRequestor(c)
+	if err != nil {
+		return err
+	}
+
+	resp, err := req.Get("https://academic.ui.ac.id/main/Welcome/")
+	if err != nil {
+		var e *SiakError
+		if errors.As(err, &e) {
+			return c.Status(e.Status).JSON(Response[any]{
+				Status:  e.Status,
+				Message: e.Message,
+				Data:    nil,
+			})
+		}
+		return err
+	}
+
+	data, err := siaklib.ParseNav(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(data)
+}
+
 func AcademicSummary(c *fiber.Ctx) error {
 	req, err := MakeRequestor(c)
 	if err != nil {
