@@ -56,7 +56,9 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	for h := range resp.Header {
-		c.Set(h, resp.Header.Get(h))
+		if !strings.Contains(h, "Access-Control") {
+			c.Set(h, resp.Header.Get(h))
+		}
 	}
 	for _, cookie := range jar.Cookies(resp.Request.URL) {
 		cookies := &fiber.Cookie{}
