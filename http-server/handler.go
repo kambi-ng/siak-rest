@@ -124,7 +124,10 @@ func Home(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(data)
+	return c.JSON(Response[siaklib.Homepage]{
+		Status:  200,
+		Message: "OK",
+		Data:    *data})
 }
 
 func Me(c *fiber.Ctx) error {
@@ -151,7 +154,10 @@ func Me(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(data)
+	return c.JSON(Response[siaklib.UserInfo]{
+		Status:  200,
+		Message: "OK",
+		Data:    *data})
 }
 
 func AcademicSummary(c *fiber.Ctx) error {
@@ -178,7 +184,10 @@ func AcademicSummary(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(data)
+	return c.JSON(Response[siaklib.StudentSummary]{
+		Status:  200,
+		Message: "OK",
+		Data:    *data})
 }
 
 func AcademicHistory(c *fiber.Ctx) error {
@@ -205,7 +214,10 @@ func AcademicHistory(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(data)
+	return c.JSON(Response[[]siaklib.SemesterScore]{
+		Status:  200,
+		Message: "OK",
+		Data:    *data})
 }
 
 func UserPhoto(c *fiber.Ctx) error {
