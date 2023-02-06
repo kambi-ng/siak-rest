@@ -36,14 +36,15 @@ func MakeRequestor(c *fiber.Ctx) (*http.Client, error) {
 	}
 
 	u, _ := url.Parse("https://academic.ui.ac.id")
+	headers := c.GetReqHeaders()
 	jar.SetCookies(u, []*http.Cookie{
 		{
 			Name:  "Mojavi",
-			Value: c.Cookies("Mojavi"),
+			Value: headers["X-Mojavi"],
 		},
 		{
 			Name:  "siakng_cc",
-			Value: c.Cookies("siakng_cc"),
+			Value: headers["X-Siakng-Cc"],
 		},
 	})
 
