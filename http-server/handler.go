@@ -12,6 +12,11 @@ import (
 	"github.com/kambi-ng/siak-rest/siaklib"
 )
 
+type CookieData struct {
+	SiakNGCC string `json:"siakng_cc"`
+	Mojavi   string `json:"mojavi"`
+}
+
 func Login(c *fiber.Ctx) error {
 	type Payload struct {
 		Username string `json:"username"`
@@ -60,6 +65,9 @@ func Login(c *fiber.Ctx) error {
 			c.Set(h, resp.Header.Get(h))
 		}
 	}
+
+	siakCookie := ""
+	mojaviCookie := ""
 	for _, cookie := range jar.Cookies(resp.Request.URL) {
 		cookies := &fiber.Cookie{}
 		cookies.Name = cookie.Name
@@ -71,13 +79,24 @@ func Login(c *fiber.Ctx) error {
 		cookies.Secure = cookie.Secure
 		cookies.HTTPOnly = cookie.HttpOnly
 
+		if cookie.Name == "siakng_cc" {
+			siakCookie = cookie.Value
+		}
+
+		if cookie.Name == "Mojavi" {
+			mojaviCookie = cookie.Value
+		}
+
 		c.Cookie(cookies)
 	}
 
-	return c.Status(resp.StatusCode).JSON(Response[any]{
+	return c.Status(resp.StatusCode).JSON(Response[CookieData]{
 		Status:  200,
-		Message: "Authentication success. Please use given cookie for next requests",
-		Data:    nil,
+		Message: "Authentication success. Please use given cookie as X-MOJAVI and X-SIAKNG-CC for next requests",
+		Data: CookieData{
+			SiakNGCC: siakCookie,
+			Mojavi:   mojaviCookie,
+		},
 	})
 }
 
