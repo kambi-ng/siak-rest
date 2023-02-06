@@ -240,7 +240,9 @@ func UserPhoto(c *fiber.Ctx) error {
 	}
 
 	for key, value := range resp.Header {
-		c.Set(key, strings.Join(value, ", "))
+		if !strings.Contains(key, "Access-Control") {
+			c.Set(key, strings.Join(value, ", "))
+		}
 	}
 	return c.SendStream(resp.Body)
 }
