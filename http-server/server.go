@@ -1,6 +1,8 @@
 package httpserver
 
 import (
+	"os"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -16,7 +18,16 @@ func MakeServer() Server {
 }
 
 func (s *Server) Start() {
-	s.Router.Use(cors.New())
+	allowedOrigins := os.Getenv("ALLOW_ORIGINS")
+
+	if allowedOrigins == "" {
+		s.Router.Use(cors.New())
+	} else {
+		s.Router.Use(cors.New(cors.Config{
+			AllowOrigins: allowedOrigins,
+		}))
+	}
+
 	s.Router.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})

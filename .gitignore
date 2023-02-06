@@ -21,3 +21,4 @@
 go.work
 html/
 /tmp
+.env
