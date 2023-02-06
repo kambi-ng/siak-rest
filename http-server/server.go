@@ -24,7 +24,8 @@ func (s *Server) Start() {
 		s.Router.Use(cors.New())
 	} else {
 		s.Router.Use(cors.New(cors.Config{
-			AllowOrigins: allowedOrigins,
+			AllowOrigins:     allowedOrigins,
+			AllowCredentials: true,
 		}))
 	}
 
