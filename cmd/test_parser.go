@@ -12,6 +12,7 @@ func main() {
 	welcome()
 	summary()
 	history()
+	classes()
 }
 
 func history() {
@@ -43,6 +44,21 @@ func summary() {
 	}
 	fmt.Printf("%+v\n", res)
 	fmt.Printf("%+v\n", res.Terms[1].Data)
+}
+
+func classes() {
+	f, err := os.Open("html/classes.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	res, err := siaklib.ParseCourseClasses(f)
+	if err != nil {
+		fmt.Printf("Error happened: %v\n", err)
+		return
+	}
+	fmt.Printf("%+v\n", res)
 }
 
 func welcome() {
