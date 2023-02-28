@@ -25,7 +25,7 @@ func (s *Server) Start() {
 	redisUrl := os.Getenv("REDIS_URL")
 
 	var limiterConfig limiter.Config
-	if redisUrl == "" {
+	if redisUrl != "" {
 		redisStore := redis.New(redis.Config{
 			URL:   redisUrl,
 			Reset: false,
