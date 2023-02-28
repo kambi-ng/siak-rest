@@ -10,6 +10,17 @@ import (
 	"github.com/gofiber/storage/redis"
 )
 
+func getPort() string {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = ":3000"
+	} else {
+		port = ":" + port
+	}
+
+	return port
+}
+
 type Server struct {
 	Router *fiber.App
 }
@@ -77,5 +88,5 @@ func (s *Server) Start() {
 	academicGroup.Get("/summary", AcademicSummary)
 	academicGroup.Get("/history", AcademicHistory)
 
-	s.Router.Listen(":8080")
+	s.Router.Listen(getPort())
 }
