@@ -87,6 +87,7 @@ func (s *Server) Start() {
 	academicGroup := s.Router.Group("/academic")
 	academicGroup.Get("/summary", AcademicSummary)
 	academicGroup.Get("/history", AcademicHistory)
+	academicGroup.Get("/classes", CourseClasses)
 
 	s.Router.Listen(getPort())
 }

@@ -246,13 +246,14 @@ func UserPhoto(c *fiber.Ctx) error {
 	}
 	return c.SendStream(resp.Body)
 }
+
 func CourseClasses(c *fiber.Ctx) error {
 	req, err := MakeRequestor(c)
 	if err != nil {
 		return err
 	}
 
-	resp, err := req.Get("https://academic.ui.ac.id/main/Academic/CoursePlanViewClass")
+	resp, err := req.Get("https://academic.ui.ac.id/main/CoursePlan/CoursePlanViewClass")
 	if err != nil {
 		var e *SiakError
 		if errors.As(err, &e) {
