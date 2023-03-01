@@ -100,25 +100,33 @@ func Login(c *fiber.Ctx) error {
 	})
 }
 
-func Home(c *fiber.Ctx) error {
-	req, err := MakeRequestor(c)
-	if err != nil {
-		return err
-	}
+type Handler func(c *fiber.Ctx, response *http.Response) error
 
-	resp, err := req.Get("https://academic.ui.ac.id/main/Welcome/")
-	if err != nil {
-		var e *SiakError
-		if errors.As(err, &e) {
-			return c.Status(e.Status).JSON(Response[any]{
-				Status:  e.Status,
-				Message: e.Message,
-				Data:    nil,
-			})
+func BaseHandler(url string, next Handler) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		req, err := MakeRequestor(c)
+		if err != nil {
+			return err
 		}
-		return err
-	}
 
+		resp, err := req.Get(url)
+		if err != nil {
+			var e *SiakError
+			if errors.As(err, &e) {
+				return c.Status(e.Status).JSON(Response[any]{
+					Status:  e.Status,
+					Message: e.Message,
+					Data:    nil,
+				})
+			}
+			return err
+		}
+
+		return next(c, resp)
+	}
+}
+
+func Home(c *fiber.Ctx, resp *http.Response) error {
 	data, err := siaklib.ParseWelcomePage(resp.Body)
 	if err != nil {
 		return err
@@ -130,25 +138,7 @@ func Home(c *fiber.Ctx) error {
 		Data:    *data})
 }
 
-func Me(c *fiber.Ctx) error {
-	req, err := MakeRequestor(c)
-	if err != nil {
-		return err
-	}
-
-	resp, err := req.Get("https://academic.ui.ac.id/main/Welcome/")
-	if err != nil {
-		var e *SiakError
-		if errors.As(err, &e) {
-			return c.Status(e.Status).JSON(Response[any]{
-				Status:  e.Status,
-				Message: e.Message,
-				Data:    nil,
-			})
-		}
-		return err
-	}
-
+func Me(c *fiber.Ctx, resp *http.Response) error {
 	data, err := siaklib.ParseNav(resp.Body)
 	if err != nil {
 		return err
@@ -160,25 +150,7 @@ func Me(c *fiber.Ctx) error {
 		Data:    *data})
 }
 
-func AcademicSummary(c *fiber.Ctx) error {
-	req, err := MakeRequestor(c)
-	if err != nil {
-		return err
-	}
-
-	resp, err := req.Get("https://academic.ui.ac.id/main/Academic/Summary")
-	if err != nil {
-		var e *SiakError
-		if errors.As(err, &e) {
-			return c.Status(e.Status).JSON(Response[any]{
-				Status:  e.Status,
-				Message: e.Message,
-				Data:    nil,
-			})
-		}
-		return err
-	}
-
+func AcademicSummary(c *fiber.Ctx, resp *http.Response) error {
 	data, err := siaklib.ParseAcademicSummaryPage(resp.Body)
 	if err != nil {
 		return err
@@ -190,25 +162,7 @@ func AcademicSummary(c *fiber.Ctx) error {
 		Data:    *data})
 }
 
-func AcademicHistory(c *fiber.Ctx) error {
-	req, err := MakeRequestor(c)
-	if err != nil {
-		return err
-	}
-
-	resp, err := req.Get("https://academic.ui.ac.id/main/Academic/HistoryByTerm")
-	if err != nil {
-		var e *SiakError
-		if errors.As(err, &e) {
-			return c.Status(e.Status).JSON(Response[any]{
-				Status:  e.Status,
-				Message: e.Message,
-				Data:    nil,
-			})
-		}
-		return err
-	}
-
+func AcademicHistory(c *fiber.Ctx, resp *http.Response) error {
 	data, err := siaklib.ParseAcademicHistoryPage(resp.Body)
 	if err != nil {
 		return err
@@ -220,25 +174,7 @@ func AcademicHistory(c *fiber.Ctx) error {
 		Data:    *data})
 }
 
-func UserPhoto(c *fiber.Ctx) error {
-	req, err := MakeRequestor(c)
-	if err != nil {
-		return err
-	}
-
-	resp, err := req.Get("https://academic.ui.ac.id/main/Academic/UserPhoto")
-	if err != nil {
-		var e *SiakError
-		if errors.As(err, &e) {
-			return c.Status(e.Status).JSON(Response[any]{
-				Status:  e.Status,
-				Message: e.Message,
-				Data:    nil,
-			})
-		}
-		return err
-	}
-
+func UserPhoto(c *fiber.Ctx, resp *http.Response) error {
 	for key, value := range resp.Header {
 		if !strings.Contains(key, "Access-Control") {
 			c.Set(key, strings.Join(value, ", "))
@@ -247,25 +183,7 @@ func UserPhoto(c *fiber.Ctx) error {
 	return c.SendStream(resp.Body)
 }
 
-func CourseClasses(c *fiber.Ctx) error {
-	req, err := MakeRequestor(c)
-	if err != nil {
-		return err
-	}
-
-	resp, err := req.Get("https://academic.ui.ac.id/main/CoursePlan/CoursePlanViewClass")
-	if err != nil {
-		var e *SiakError
-		if errors.As(err, &e) {
-			return c.Status(e.Status).JSON(Response[any]{
-				Status:  e.Status,
-				Message: e.Message,
-				Data:    nil,
-			})
-		}
-		return err
-	}
-
+func CourseClasses(c *fiber.Ctx, resp *http.Response) error {
 	data, err := siaklib.ParseCourseClasses(resp.Body)
 	if err != nil {
 		return err

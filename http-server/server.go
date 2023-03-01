@@ -80,14 +80,14 @@ func (s *Server) Start() {
 	})
 
 	s.Router.Post("/login", Login)
-	s.Router.Get("/me", Me)
-	s.Router.Get("/home", Home)
-	s.Router.Get("/photo", UserPhoto)
+	s.Router.Get("/me", BaseHandler("https://academic.ui.ac.id/main/Welcome/", Me))
+	s.Router.Get("/home", BaseHandler("https://academic.ui.ac.id/main/Welcome/", Home))
+	s.Router.Get("/photo", BaseHandler("https://academic.ui.ac.id/main/Academic/UserPhoto", UserPhoto))
 
 	academicGroup := s.Router.Group("/academic")
-	academicGroup.Get("/summary", AcademicSummary)
-	academicGroup.Get("/history", AcademicHistory)
-	academicGroup.Get("/classes", CourseClasses)
+	academicGroup.Get("/summary", BaseHandler("https://academic.ui.ac.id/main/Academic/Summary", AcademicSummary))
+	academicGroup.Get("/history", BaseHandler("https://academic.ui.ac.id/main/Academic/HistoryByTerm", AcademicHistory))
+	academicGroup.Get("/classes", BaseHandler("https://academic.ui.ac.id/main/CoursePlan/CoursePlanViewClass", CourseClasses))
 
 	s.Router.Listen(getPort())
 }
