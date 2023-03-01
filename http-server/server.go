@@ -62,6 +62,9 @@ func (s *Server) Start() {
 		}
 	} else {
 		limiterConfig = limiter.ConfigDefault
+		limiterConfig.Next = func(c *fiber.Ctx) bool {
+			return c.IP() == "127.0.0.1"
+		}
 	}
 
 	s.Router.Use(limiter.New(limiterConfig))
