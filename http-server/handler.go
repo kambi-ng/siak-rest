@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/cookiejar"
@@ -190,6 +191,37 @@ func CourseClasses(c *fiber.Ctx, resp *http.Response) error {
 	}
 
 	return c.JSON(Response[[]siaklib.Course]{
+		Status:  200,
+		Message: "OK",
+		Data:    data})
+}
+
+func CourseComponent(c *fiber.Ctx) error {
+	courseId := c.Params("courseId")
+	req, err := MakeRequestor(c)
+	if err != nil {
+		return err
+	}
+
+	resp, err := req.Get(fmt.Sprintf("https://academic.ui.ac.id/main/Academic/ScoreDetail?cc=%s", courseId))
+	if err != nil {
+		var e *SiakError
+		if errors.As(err, &e) {
+			return c.Status(e.Status).JSON(Response[any]{
+				Status:  e.Status,
+				Message: e.Message,
+				Data:    nil,
+			})
+		}
+		return err
+	}
+
+	data, err := siaklib.ParseCourseDetail(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(Response[[]siaklib.CourseComponent]{
 		Status:  200,
 		Message: "OK",
 		Data:    data})

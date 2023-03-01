@@ -91,6 +91,7 @@ func (s *Server) Start() {
 	academicGroup.Get("/summary", BaseHandler("https://academic.ui.ac.id/main/Academic/Summary", AcademicSummary))
 	academicGroup.Get("/history", BaseHandler("https://academic.ui.ac.id/main/Academic/HistoryByTerm", AcademicHistory))
 	academicGroup.Get("/classes", BaseHandler("https://academic.ui.ac.id/main/CoursePlan/CoursePlanViewClass", CourseClasses))
+	academicGroup.Get("/course/:courseId<int>", CourseComponent)
 
 	s.Router.Listen(getPort())
 }

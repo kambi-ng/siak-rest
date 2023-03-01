@@ -20,6 +20,12 @@ type Course struct {
 	Lecturers []string `json:"lecturers,omitempty"`
 }
 
+type CourseComponent struct {
+	Name   string `json:"name,omitempty"`
+	Weight string `json:"weight,omitempty"`
+	Score  string `json:"score,omitempty"` // May be "Kosong", so lets just make it string lol
+}
+
 func ParseCourseClasses(r io.Reader) ([]Course, error) {
 	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {
@@ -61,4 +67,33 @@ func ParseCourseClasses(r io.Reader) ([]Course, error) {
 	})
 
 	return courses, nil
+}
+
+func ParseCourseDetail(r io.Reader) ([]CourseComponent, error) {
+	doc, err := goquery.NewDocumentFromReader(r)
+	if err != nil {
+		return nil, err
+	}
+
+	if !strings.Contains(doc.Text(), "Bobot") {
+		return []CourseComponent{}, nil
+	}
+
+	components := make([]CourseComponent, 0)
+	table := doc.FindNodes(doc.Find("table.box").Get(2))
+	table.Find(".alt, .x").Each(func(i int, s *goquery.Selection) {
+		datas := s.Find("td")
+
+		name := getTextFromNode(datas.Get(0))
+		weight := getTextFromNode(datas.Get(1))
+		score := getTextFromNode(datas.Get(2))
+
+		components = append(components, CourseComponent{
+			Name:   name,
+			Weight: weight,
+			Score:  score,
+		})
+	})
+
+	return components, nil
 }

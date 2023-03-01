@@ -13,6 +13,48 @@ func main() {
 	summary()
 	history()
 	classes()
+	components()
+}
+
+func components() {
+	f, err := os.Open("html/components/ok.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	res, err := siaklib.ParseCourseDetail(f)
+	if err != nil {
+		fmt.Printf("Error happened: %v\n", err)
+		return
+	}
+	fmt.Printf("%+v\n", res)
+
+	f, err = os.Open("html/components/missing-table.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	res, err = siaklib.ParseCourseDetail(f)
+	if err != nil {
+		fmt.Printf("Error happened: %v\n", err)
+		return
+	}
+	fmt.Printf("%+v\n", res)
+
+	f, err = os.Open("html/components/missing-everything.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	res, err = siaklib.ParseCourseDetail(f)
+	if err != nil {
+		fmt.Printf("Error happened: %v\n", err)
+		return
+	}
+	fmt.Printf("%+v\n", res)
 }
 
 func history() {
