@@ -127,6 +127,16 @@ func BaseHandler(url string, next Handler) func(c *fiber.Ctx) error {
 	}
 }
 
+// ShowAccount godoc
+//
+//	@Summary		Show an account
+//	@Description	get string by ID
+//	@Tags			accounts
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int	true	"Account ID"
+//	@Success		200	{object}	map[string]string
+//	@Router			/accounts/{id} [get]
 func Home(c *fiber.Ctx, resp *http.Response) error {
 	data, err := siaklib.ParseWelcomePage(resp.Body)
 	if err != nil {
