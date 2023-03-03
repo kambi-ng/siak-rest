@@ -31,7 +31,7 @@ func MakeServer() Server {
 	}
 }
 
-func (s *Server) Start() {
+func (s *Server) Start() error {
 	allowedOrigins := os.Getenv("ALLOW_ORIGINS")
 	redisUrl := os.Getenv("REDIS_URL")
 
@@ -93,5 +93,5 @@ func (s *Server) Start() {
 	academicGroup.Get("/classes", BaseHandler("https://academic.ui.ac.id/main/CoursePlan/CoursePlanViewClass", CourseClasses))
 	academicGroup.Get("/course/:courseId<int>", CourseComponent)
 
-	s.Router.Listen(getPort())
+	return s.Router.Listen(getPort())
 }
