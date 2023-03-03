@@ -5,6 +5,8 @@ import (
 	httpserver "github.com/kambi-ng/siak-rest/http-server"
 )
 
+// TODO: This is fake and gay
+
 // @title Fiber Example API
 // @version 1.0
 // @description This is a sample swagger for Fiber

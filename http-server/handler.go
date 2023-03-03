@@ -127,6 +127,8 @@ func BaseHandler(url string, next Handler) func(c *fiber.Ctx) error {
 	}
 }
 
+// TODO: This is fake and gay
+
 // ShowAccount godoc
 //
 //	@Summary		Show an account
