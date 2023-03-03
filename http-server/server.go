@@ -8,6 +8,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/storage/redis"
+
+	"github.com/gofiber/swagger"
+	_ "github.com/kambi-ng/siak-rest/docs"
 )
 
 func getPort() string {
@@ -92,6 +95,8 @@ func (s *Server) Start() error {
 	academicGroup.Get("/history", BaseHandler("https://academic.ui.ac.id/main/Academic/HistoryByTerm", AcademicHistory))
 	academicGroup.Get("/classes", BaseHandler("https://academic.ui.ac.id/main/CoursePlan/CoursePlanViewClass", CourseClasses))
 	academicGroup.Get("/course/:courseId<int>", CourseComponent)
+
+	s.Router.Get("/swagger/*", swagger.HandlerDefault) // default
 
 	return s.Router.Listen(getPort())
 }
