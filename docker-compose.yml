@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  doc:
+    container_name: siak-rest-doc
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
