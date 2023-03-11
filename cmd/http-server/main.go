@@ -8,10 +8,10 @@ import (
 	httpserver "github.com/kambi-ng/siak-rest/http-server"
 )
 
-// @title Siak REST API
-// @version 1.0
-// @description This an REST API for siak
-// @BasePath /
+//	@title			Siak REST API
+//	@version		1.0
+//	@description	This an REST API for siak
+//	@BasePath		/
 func main() {
 	err := godotenv.Load()
 	if err != nil {

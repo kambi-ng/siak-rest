@@ -1,4 +1,55 @@
 basePath: /
+definitions:
+  httpserver.CookieData:
+    properties:
+      mojavi:
+        default: UrdBjDansj/s95fYW58TfQ
+        type: string
+        x-order: "02"
+      siakng_cc:
+        default: 2jNeTbVCFfkPIcnUkzwrVw
+        type: string
+        x-order: "01"
+    type: object
+  httpserver.LoginRequest:
+    properties:
+      password:
+        default: password
+        type: string
+        x-order: "02"
+      username:
+        default: username
+        type: string
+        x-order: "01"
+    type: object
+  httpserver.Response-any:
+    properties:
+      data:
+        x-order: "03"
+      message:
+        default: Success
+        type: string
+        x-order: "02"
+      status:
+        default: 200
+        type: integer
+        x-order: "01"
+    type: object
+  httpserver.Response-httpserver_CookieData:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/httpserver.CookieData'
+        x-order: "03"
+      message:
+        default: Success
+        type: string
+        x-order: "02"
+      status:
+        default: 200
+        type: integer
+        x-order: "01"
+    type: object
 info:
   contact: {}
   description: This an REST API for siak
@@ -26,6 +77,32 @@ paths:
               type: string
             type: object
       summary: Show an account
+      tags:
+      - accounts
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: get login cookie for other requests
+      parameters:
+      - description: login request
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/httpserver.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpserver.Response-httpserver_CookieData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpserver.Response-any'
+      summary: login account
       tags:
       - accounts
 swagger: "2.0"

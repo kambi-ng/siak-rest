@@ -14,17 +14,26 @@ import (
 )
 
 type CookieData struct {
-	SiakNGCC string `json:"siakng_cc"`
-	Mojavi   string `json:"mojavi"`
+	SiakNGCC string `json:"siakng_cc" default:"2jNeTbVCFfkPIcnUkzwrVw" extensions:"x-order=01"`
+	Mojavi   string `json:"mojavi" default:"UrdBjDansj/s95fYW58TfQ" extensions:"x-order=02"`
 }
 
-func Login(c *fiber.Ctx) error {
-	type Payload struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
+type LoginRequest struct {
+	Username string `json:"username" default:"username" extensions:"x-order=01"`
+	Password string `json:"password" default:"password" extensions:"x-order=02"`
+}
 
-	var p Payload
+// @Summary		login account
+// @Description	get login cookie for other requests
+// @Tags			accounts
+// @Accept			json
+// @Produce		json
+// @Param loginRequest body LoginRequest true "login request"
+// @Success		200	{object}	Response[CookieData]
+// @Failure		401	{object}	Response[any]
+// @Router		/login [post]
+func Login(c *fiber.Ctx) error {
+	var p LoginRequest
 
 	if err := c.BodyParser(&p); err != nil {
 		return err
@@ -58,7 +67,11 @@ func Login(c *fiber.Ctx) error {
 
 	resp, err = client.Get("https://academic.ui.ac.id/main/Authentication/ChangeRole")
 	if err != nil {
-		return err
+		return c.Status(fiber.StatusUnauthorized).JSON(Response[any]{
+			Status:  401,
+			Message: "Authentication failed",
+			Data:    nil,
+		})
 	}
 
 	for h := range resp.Header {
@@ -127,18 +140,14 @@ func BaseHandler(url string, next Handler) func(c *fiber.Ctx) error {
 	}
 }
 
-// TODO: This is fake and gay
-
-// ShowAccount godoc
-//
-//	@Summary		Show an account
-//	@Description	get string by ID
-//	@Tags			accounts
-//	@Accept			json
-//	@Produce		json
-//	@Param			id	path		int	true	"Account ID"
-//	@Success		200	{object}	map[string]string
-//	@Router			/accounts/{id} [get]
+// @Summary		Show an account
+// @Description	get string by ID
+// @Tags			accounts
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int	true	"Account ID"
+// @Success		200	{object}	map[string]string
+// @Router			/accounts/{id} [get]
 func Home(c *fiber.Ctx, resp *http.Response) error {
 	data, err := siaklib.ParseWelcomePage(resp.Body)
 	if err != nil {
@@ -148,7 +157,8 @@ func Home(c *fiber.Ctx, resp *http.Response) error {
 	return c.JSON(Response[siaklib.Homepage]{
 		Status:  200,
 		Message: "OK",
-		Data:    *data})
+		Data:    *data,
+	})
 }
 
 func Me(c *fiber.Ctx, resp *http.Response) error {
@@ -160,7 +170,8 @@ func Me(c *fiber.Ctx, resp *http.Response) error {
 	return c.JSON(Response[siaklib.UserInfo]{
 		Status:  200,
 		Message: "OK",
-		Data:    *data})
+		Data:    *data,
+	})
 }
 
 func AcademicSummary(c *fiber.Ctx, resp *http.Response) error {
@@ -172,7 +183,8 @@ func AcademicSummary(c *fiber.Ctx, resp *http.Response) error {
 	return c.JSON(Response[siaklib.StudentSummary]{
 		Status:  200,
 		Message: "OK",
-		Data:    *data})
+		Data:    *data,
+	})
 }
 
 func AcademicHistory(c *fiber.Ctx, resp *http.Response) error {
@@ -184,7 +196,8 @@ func AcademicHistory(c *fiber.Ctx, resp *http.Response) error {
 	return c.JSON(Response[[]siaklib.SemesterScore]{
 		Status:  200,
 		Message: "OK",
-		Data:    *data})
+		Data:    *data,
+	})
 }
 
 func UserPhoto(c *fiber.Ctx, resp *http.Response) error {
@@ -205,7 +218,8 @@ func CourseClasses(c *fiber.Ctx, resp *http.Response) error {
 	return c.JSON(Response[[]siaklib.Course]{
 		Status:  200,
 		Message: "OK",
-		Data:    data})
+		Data:    data,
+	})
 }
 
 func CourseComponent(c *fiber.Ctx) error {
@@ -236,5 +250,6 @@ func CourseComponent(c *fiber.Ctx) error {
 	return c.JSON(Response[[]siaklib.CourseComponent]{
 		Status:  200,
 		Message: "OK",
-		Data:    data})
+		Data:    data,
+	})
 }

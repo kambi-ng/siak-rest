@@ -42,6 +42,119 @@
                     }
                 }
             }
+        },
+        "/login": {
+            "post": {
+                "description": "get login cookie for other requests",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "login account",
+                "parameters": [
+                    {
+                        "description": "login request",
+                        "name": "loginRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-httpserver_CookieData"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-any"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "httpserver.CookieData": {
+            "type": "object",
+            "properties": {
+                "siakng_cc": {
+                    "type": "string",
+                    "default": "2jNeTbVCFfkPIcnUkzwrVw",
+                    "x-order": "01"
+                },
+                "mojavi": {
+                    "type": "string",
+                    "default": "UrdBjDansj/s95fYW58TfQ",
+                    "x-order": "02"
+                }
+            }
+        },
+        "httpserver.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "default": "username",
+                    "x-order": "01"
+                },
+                "password": {
+                    "type": "string",
+                    "default": "password",
+                    "x-order": "02"
+                }
+            }
+        },
+        "httpserver.Response-any": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "integer",
+                    "default": 200,
+                    "x-order": "01"
+                },
+                "message": {
+                    "type": "string",
+                    "default": "Success",
+                    "x-order": "02"
+                },
+                "data": {
+                    "x-order": "03"
+                }
+            }
+        },
+        "httpserver.Response-httpserver_CookieData": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "integer",
+                    "default": 200,
+                    "x-order": "01"
+                },
+                "message": {
+                    "type": "string",
+                    "default": "Success",
+                    "x-order": "02"
+                },
+                "data": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/httpserver.CookieData"
+                        }
+                    ],
+                    "x-order": "03"
+                }
+            }
         }
     }
 }
