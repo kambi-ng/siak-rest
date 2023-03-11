@@ -50,35 +50,377 @@ definitions:
         type: integer
         x-order: "01"
     type: object
+  httpserver.Response-siaklib_Homepage:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/siaklib.Homepage'
+        x-order: "03"
+      message:
+        default: Success
+        type: string
+        x-order: "02"
+      status:
+        default: 200
+        type: integer
+        x-order: "01"
+    type: object
+  httpserver.Response-siaklib_SemesterScore:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/siaklib.SemesterScore'
+        x-order: "03"
+      message:
+        default: Success
+        type: string
+        x-order: "02"
+      status:
+        default: 200
+        type: integer
+        x-order: "01"
+    type: object
+  httpserver.Response-siaklib_StudentSummary:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/siaklib.StudentSummary'
+        x-order: "03"
+      message:
+        default: Success
+        type: string
+        x-order: "02"
+      status:
+        default: 200
+        type: integer
+        x-order: "01"
+    type: object
+  httpserver.Response-siaklib_UserInfo:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/siaklib.UserInfo'
+        x-order: "03"
+      message:
+        default: Success
+        type: string
+        x-order: "02"
+      status:
+        default: 200
+        type: integer
+        x-order: "01"
+    type: object
+  siaklib.AcademicTerm:
+    properties:
+      data:
+        $ref: '#/definitions/siaklib.TermData'
+      period:
+        type: string
+      term:
+        type: string
+    type: object
+  siaklib.Homepage:
+    properties:
+      news:
+        items:
+          $ref: '#/definitions/siaklib.News'
+        type: array
+      user:
+        $ref: '#/definitions/siaklib.UserOverview'
+    type: object
+  siaklib.News:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
+  siaklib.SemesterScore:
+    properties:
+      period:
+        type: string
+      scores:
+        items:
+          $ref: '#/definitions/siaklib.SubjectScore'
+        type: array
+      semester:
+        type: integer
+    type: object
+  siaklib.StudentAcademic:
+    properties:
+      credits_earned:
+        type: integer
+      credits_passed:
+        type: integer
+      gpa:
+        type: number
+      grade_points:
+        type: number
+      major:
+        type: string
+      name:
+        type: string
+      npm:
+        type: string
+      status:
+        type: string
+      tutor:
+        type: string
+      year:
+        type: integer
+    type: object
+  siaklib.StudentSummary:
+    properties:
+      scores_overview:
+        additionalProperties:
+          type: integer
+        type: object
+      student:
+        $ref: '#/definitions/siaklib.StudentAcademic'
+      terms:
+        items:
+          $ref: '#/definitions/siaklib.AcademicTerm'
+        type: array
+    type: object
+  siaklib.SubjectScore:
+    properties:
+      class:
+        type: string
+      code:
+        type: string
+      credits:
+        type: integer
+      curriculum:
+        type: string
+      final_index:
+        type: string
+      final_score:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+    type: object
+  siaklib.TermData:
+    properties:
+      credits_passed:
+        type: integer
+      credits_taken:
+        type: integer
+      grade_point:
+        type: number
+      grade_point_average:
+        type: number
+      subjects_taken:
+        type: integer
+      total_credits_earned:
+        type: integer
+      total_credits_passed:
+        type: integer
+      total_credits_taken:
+        type: integer
+      total_grade_point:
+        type: number
+      total_grade_point_average:
+        type: number
+      total_passed_grade_point_average:
+        type: number
+    type: object
+  siaklib.UserInfo:
+    properties:
+      group:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+    type: object
+  siaklib.UserOverview:
+    properties:
+      identity:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
 info:
   contact: {}
   description: This an REST API for siak
   title: Siak REST API
   version: "1.0"
 paths:
-  /accounts/{id}:
+  /academic/classes:
     get:
-      consumes:
-      - application/json
-      description: get string by ID
+      description: get user course classes
       parameters:
-      - description: Account ID
-        in: path
-        name: id
+      - description: siakng cookie
+        in: header
+        name: X-Siakng-Cc
         required: true
-        type: integer
+        type: string
+      - description: mojavi cookie
+        in: header
+        name: X-Mojavi
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Show an account
+            $ref: '#/definitions/httpserver.Response-siaklib_StudentSummary'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpserver.Response-any'
+      summary: user course classes
       tags:
-      - accounts
+      - academic
+  /academic/course/{courseId}:
+    get:
+      description: get course info by id
+      parameters:
+      - description: course id
+        in: path
+        name: courseId
+        required: true
+        type: integer
+      - description: siakng cookie
+        in: header
+        name: X-Siakng-Cc
+        required: true
+        type: string
+      - description: mojavi cookie
+        in: header
+        name: X-Mojavi
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpserver.Response-siaklib_StudentSummary'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpserver.Response-any'
+      summary: course info
+      tags:
+      - academic
+  /academic/history:
+    get:
+      description: get user academic history
+      parameters:
+      - description: siakng cookie
+        in: header
+        name: X-Siakng-Cc
+        required: true
+        type: string
+      - description: mojavi cookie
+        in: header
+        name: X-Mojavi
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpserver.Response-siaklib_SemesterScore'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpserver.Response-any'
+      summary: user academic history
+      tags:
+      - academic
+  /academic/photo:
+    get:
+      description: get user academic photo
+      parameters:
+      - description: siakng cookie
+        in: header
+        name: X-Siakng-Cc
+        required: true
+        type: string
+      - description: mojavi cookie
+        in: header
+        name: X-Mojavi
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpserver.Response-siaklib_StudentSummary'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpserver.Response-any'
+      summary: user photo
+      tags:
+      - academic
+  /academic/summary:
+    get:
+      description: get user academic summary
+      parameters:
+      - description: siakng cookie
+        in: header
+        name: X-Siakng-Cc
+        required: true
+        type: string
+      - description: mojavi cookie
+        in: header
+        name: X-Mojavi
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpserver.Response-siaklib_StudentSummary'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpserver.Response-any'
+      summary: user academic summary
+      tags:
+      - academic
+  /home:
+    get:
+      description: get home page
+      parameters:
+      - description: siakng cookie
+        in: header
+        name: X-Siakng-Cc
+        required: true
+        type: string
+      - description: mojavi cookie
+        in: header
+        name: X-Mojavi
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpserver.Response-siaklib_Homepage'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpserver.Response-any'
+      summary: home page
   /login:
     post:
       consumes:
@@ -103,6 +445,30 @@ paths:
           schema:
             $ref: '#/definitions/httpserver.Response-any'
       summary: login account
-      tags:
-      - accounts
+  /me:
+    get:
+      description: get user account info
+      parameters:
+      - description: siakng cookie
+        in: header
+        name: X-Siakng-Cc
+        required: true
+        type: string
+      - description: mojavi cookie
+        in: header
+        name: X-Mojavi
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpserver.Response-siaklib_UserInfo'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpserver.Response-any'
+      summary: user account
 swagger: "2.0"

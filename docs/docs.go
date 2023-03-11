@@ -15,25 +15,29 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/accounts/{id}": {
+        "/academic/classes": {
             "get": {
-                "description": "get string by ID",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "get user course classes",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "accounts"
+                    "academic"
                 ],
-                "summary": "Show an account",
+                "summary": "user course classes",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Account ID",
-                        "name": "id",
-                        "in": "path",
+                        "type": "string",
+                        "description": "siakng cookie",
+                        "name": "X-Siakng-Cc",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "mojavi cookie",
+                        "name": "X-Mojavi",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -41,10 +45,227 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/httpserver.Response-siaklib_StudentSummary"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/academic/course/{courseId}": {
+            "get": {
+                "description": "get course info by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "academic"
+                ],
+                "summary": "course info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "course id",
+                        "name": "courseId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "siakng cookie",
+                        "name": "X-Siakng-Cc",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "mojavi cookie",
+                        "name": "X-Mojavi",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-siaklib_StudentSummary"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/academic/history": {
+            "get": {
+                "description": "get user academic history",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "academic"
+                ],
+                "summary": "user academic history",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "siakng cookie",
+                        "name": "X-Siakng-Cc",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "mojavi cookie",
+                        "name": "X-Mojavi",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-siaklib_SemesterScore"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/academic/photo": {
+            "get": {
+                "description": "get user academic photo",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "academic"
+                ],
+                "summary": "user photo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "siakng cookie",
+                        "name": "X-Siakng-Cc",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "mojavi cookie",
+                        "name": "X-Mojavi",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-siaklib_StudentSummary"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/academic/summary": {
+            "get": {
+                "description": "get user academic summary",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "academic"
+                ],
+                "summary": "user academic summary",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "siakng cookie",
+                        "name": "X-Siakng-Cc",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "mojavi cookie",
+                        "name": "X-Mojavi",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-siaklib_StudentSummary"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/home": {
+            "get": {
+                "description": "get home page",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "home page",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "siakng cookie",
+                        "name": "X-Siakng-Cc",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "mojavi cookie",
+                        "name": "X-Mojavi",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-siaklib_Homepage"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-any"
                         }
                     }
                 }
@@ -58,9 +279,6 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
-                ],
-                "tags": [
-                    "accounts"
                 ],
                 "summary": "login account",
                 "parameters": [
@@ -79,6 +297,45 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/httpserver.Response-httpserver_CookieData"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/me": {
+            "get": {
+                "description": "get user account info",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "user account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "siakng cookie",
+                        "name": "X-Siakng-Cc",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "mojavi cookie",
+                        "name": "X-Mojavi",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.Response-siaklib_UserInfo"
                         }
                     },
                     "401": {
@@ -160,6 +417,304 @@ const docTemplate = `{
                         }
                     ],
                     "x-order": "03"
+                }
+            }
+        },
+        "httpserver.Response-siaklib_Homepage": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "integer",
+                    "default": 200,
+                    "x-order": "01"
+                },
+                "message": {
+                    "type": "string",
+                    "default": "Success",
+                    "x-order": "02"
+                },
+                "data": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/siaklib.Homepage"
+                        }
+                    ],
+                    "x-order": "03"
+                }
+            }
+        },
+        "httpserver.Response-siaklib_SemesterScore": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "integer",
+                    "default": 200,
+                    "x-order": "01"
+                },
+                "message": {
+                    "type": "string",
+                    "default": "Success",
+                    "x-order": "02"
+                },
+                "data": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/siaklib.SemesterScore"
+                        }
+                    ],
+                    "x-order": "03"
+                }
+            }
+        },
+        "httpserver.Response-siaklib_StudentSummary": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "integer",
+                    "default": 200,
+                    "x-order": "01"
+                },
+                "message": {
+                    "type": "string",
+                    "default": "Success",
+                    "x-order": "02"
+                },
+                "data": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/siaklib.StudentSummary"
+                        }
+                    ],
+                    "x-order": "03"
+                }
+            }
+        },
+        "httpserver.Response-siaklib_UserInfo": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "integer",
+                    "default": 200,
+                    "x-order": "01"
+                },
+                "message": {
+                    "type": "string",
+                    "default": "Success",
+                    "x-order": "02"
+                },
+                "data": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/siaklib.UserInfo"
+                        }
+                    ],
+                    "x-order": "03"
+                }
+            }
+        },
+        "siaklib.AcademicTerm": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/siaklib.TermData"
+                },
+                "period": {
+                    "type": "string"
+                },
+                "term": {
+                    "type": "string"
+                }
+            }
+        },
+        "siaklib.Homepage": {
+            "type": "object",
+            "properties": {
+                "news": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/siaklib.News"
+                    }
+                },
+                "user": {
+                    "$ref": "#/definitions/siaklib.UserOverview"
+                }
+            }
+        },
+        "siaklib.News": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "siaklib.SemesterScore": {
+            "type": "object",
+            "properties": {
+                "period": {
+                    "type": "string"
+                },
+                "scores": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/siaklib.SubjectScore"
+                    }
+                },
+                "semester": {
+                    "type": "integer"
+                }
+            }
+        },
+        "siaklib.StudentAcademic": {
+            "type": "object",
+            "properties": {
+                "credits_earned": {
+                    "type": "integer"
+                },
+                "credits_passed": {
+                    "type": "integer"
+                },
+                "gpa": {
+                    "type": "number"
+                },
+                "grade_points": {
+                    "type": "number"
+                },
+                "major": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "npm": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tutor": {
+                    "type": "string"
+                },
+                "year": {
+                    "type": "integer"
+                }
+            }
+        },
+        "siaklib.StudentSummary": {
+            "type": "object",
+            "properties": {
+                "scores_overview": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                },
+                "student": {
+                    "$ref": "#/definitions/siaklib.StudentAcademic"
+                },
+                "terms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/siaklib.AcademicTerm"
+                    }
+                }
+            }
+        },
+        "siaklib.SubjectScore": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "credits": {
+                    "type": "integer"
+                },
+                "curriculum": {
+                    "type": "string"
+                },
+                "final_index": {
+                    "type": "string"
+                },
+                "final_score": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "siaklib.TermData": {
+            "type": "object",
+            "properties": {
+                "credits_passed": {
+                    "type": "integer"
+                },
+                "credits_taken": {
+                    "type": "integer"
+                },
+                "grade_point": {
+                    "type": "number"
+                },
+                "grade_point_average": {
+                    "type": "number"
+                },
+                "subjects_taken": {
+                    "type": "integer"
+                },
+                "total_credits_earned": {
+                    "type": "integer"
+                },
+                "total_credits_passed": {
+                    "type": "integer"
+                },
+                "total_credits_taken": {
+                    "type": "integer"
+                },
+                "total_grade_point": {
+                    "type": "number"
+                },
+                "total_grade_point_average": {
+                    "type": "number"
+                },
+                "total_passed_grade_point_average": {
+                    "type": "number"
+                }
+            }
+        },
+        "siaklib.UserInfo": {
+            "type": "object",
+            "properties": {
+                "group": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "siaklib.UserOverview": {
+            "type": "object",
+            "properties": {
+                "identity": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         }
