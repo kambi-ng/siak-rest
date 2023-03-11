@@ -1,6 +1,7 @@
 package httpserver
 
 import (
+	"html/template"
 	"os"
 	"time"
 
@@ -96,7 +97,9 @@ func (s *Server) Start() error {
 	academicGroup.Get("/classes", BaseHandler("https://academic.ui.ac.id/main/CoursePlan/CoursePlanViewClass", CourseClasses))
 	academicGroup.Get("/course/:courseId<int>", CourseComponent)
 
-	s.Router.Get("/swagger/*", swagger.HandlerDefault) // default
+	s.Router.Get("/swagger/*", swagger.New(swagger.Config{
+		CustomStyle: template.CSS(darkModeCss),
+	}))
 
 	return s.Router.Listen(getPort())
 }
