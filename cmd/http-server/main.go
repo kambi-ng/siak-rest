@@ -8,15 +8,17 @@ import (
 	httpserver "github.com/kambi-ng/siak-rest/http-server"
 )
 
-//	@title			Siak REST API
-//	@version		1.0
-//	@description	This an REST API for siak
-//	@BasePath		/
+// @title			Siak REST API
+// @version		1.0
+// @description	This an REST API for siak
+// @BasePath		/
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Printf("Error loading .env file, %s\n", err.Error())
-		os.Exit(1)
+	if os.Getenv("ENV") != "PRODUCTION" {
+		err := godotenv.Load()
+		if err != nil {
+			fmt.Printf("Error loading .env file, %s\n", err.Error())
+			os.Exit(1)
+		}
 	}
 
 	s := httpserver.MakeServer()
