@@ -5,6 +5,7 @@ import (
 	"io"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"golang.org/x/net/html"
@@ -159,6 +160,7 @@ type SubjectScore struct {
 	Status     string `json:"status"`
 	FinalScore string `json:"final_score"`
 	FinalIndex string `json:"final_index"`
+	ClassId    string `json:"class_id"`
 }
 
 type SemesterScore struct {
@@ -189,17 +191,19 @@ func parseSubjectRow(row *goquery.Selection) SubjectScore {
 	credits, _ := strconv.Atoi(children.Get(5).FirstChild.Data)
 	status := children.Get(6).FirstChild.Data
 
-	var finalScore, finalIndex string
+	var finalScore, finalIndex, classId string
 	if children.Length() == 10 {
 		finalScore = getTextFromNode(children.Get(7).FirstChild)
 		finalIndex = getTextFromNode(children.Get(8).FirstChild)
+		classId = strings.Split(children.Get(9).FirstChild.Attr[0].Val, "=")[1]
 	} else {
 		finalScore = getTextFromNode(children.Get(7).FirstChild)
 		finalIndex = finalScore
+		classId = strings.Split(children.Get(8).FirstChild.Attr[0].Val, "=")[1]
 	}
 
 	return SubjectScore{
-		code, curriculum, name, class, credits, status, finalScore, finalIndex,
+		code, curriculum, name, class, credits, status, finalScore, finalIndex, classId,
 	}
 }
 
