@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/storage/redis"
 
 	"github.com/gofiber/swagger"
@@ -72,6 +73,7 @@ func (s *Server) Start() error {
 	}
 
 	s.Router.Use(limiter.New(limiterConfig))
+	s.Router.Use(recover.New())
 
 	if allowedOrigins == "" {
 		s.Router.Use(cors.New())
