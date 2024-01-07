@@ -80,7 +80,7 @@ func ParseCourseDetail(r io.Reader) ([]CourseComponent, error) {
 	}
 
 	components := make([]CourseComponent, 0)
-	table := doc.FindNodes(doc.Find("table.box").Get(2))
+	table := doc.Find("table.box").Last()
 	table.Find(".alt, .x").Each(func(i int, s *goquery.Selection) {
 		datas := s.Find("td")
 
