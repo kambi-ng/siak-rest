@@ -42,8 +42,15 @@ func Login(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+
+	tr, err := MakeTlsTransport()
+	if err != nil {
+		return err
+	}
+
 	client := &http.Client{
-		Jar: jar,
+		Jar:       jar,
+		Transport: tr,
 	}
 
 	resp, err := client.PostForm("https://academic.ui.ac.id/main/Authentication/Index", url.Values{"u": {p.Username}, "p": {p.Password}})
